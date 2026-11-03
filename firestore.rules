@@ -1,0 +1,65 @@
+rules_version = '2';
+
+// Правила безопасности Bilim для Firebase.
+// Вставь это в Firebase: Firestore Database -> Rules -> Publish.
+//
+// Доска идей:
+//  - читать идеи могут все;
+//  - каждый может написать идею (3–280 символов) без ссылок и номеров телефонов;
+//  - можно ставить и убирать свой лайк и пожаловаться на идею (идея с 3 жалобами скрывается в приложении);
+//  - удалять можно только свои идеи (остальные удаляет владелец в консоли Firebase).
+// Сообщения об ошибках в вопросах (коллекция reports):
+//  - любой ученик может отправить сообщение, но читать их может только владелец в консоли Firebase.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /ideas/{ideaId} {
+      allow read: if true;
+
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['text', 'subject', 'author', 'authorName', 'createdAt', 'likes', 'reports'])
+        && request.resource.data.author == request.auth.uid
+        && request.resource.data.text is string
+        && request.resource.data.text.size() >= 3
+        && request.resource.data.text.size() <= 280
+        && !request.resource.data.text.matches('(?i)[\\s\\S]*(https?://|www[.]|t[.]me/)[\\s\\S]*')
+        && !request.resource.data.text.matches('[\\s\\S]*[0-9]([ ()+.-]*[0-9]){8,}[\\s\\S]*')
+        && request.resource.data.subject is string
+        && request.resource.data.subject.size() <= 20
+        && request.resource.data.authorName is string
+        && request.resource.data.authorName.size() <= 24
+        && request.resource.data.createdAt is number
+        && request.resource.data.likes is list
+        && request.resource.data.likes.size() == 0
+        && (!('reports' in request.resource.data) || (request.resource.data.reports is list && request.resource.data.reports.size() == 0));
+
+      // Лайк: можно добавить или убрать только себя. Жалоба: можно только добавить себя.
+      allow update: if request.auth != null && (
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes'])
+          && request.resource.data.likes.toSet().difference(resource.data.likes.toSet()).hasOnly([request.auth.uid])
+          && resource.data.likes.toSet().difference(request.resource.data.likes.toSet()).hasOnly([request.auth.uid]))
+        ||
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reports'])
+          && request.resource.data.reports is list
+          && request.resource.data.reports.size() <= 50
+          && request.resource.data.reports.toSet().difference(resource.data.get('reports', []).toSet()).hasOnly([request.auth.uid])
+          && resource.data.get('reports', []).toSet().difference(request.resource.data.reports.toSet()).size() == 0)
+      );
+
+      allow delete: if request.auth != null && resource.data.author == request.auth.uid;
+    }
+
+    match /reports/{reportId} {
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['key', 'reason', 'comment', 'lang', 'q', 'author', 'createdAt'])
+        && request.resource.data.author == request.auth.uid
+        && request.resource.data.key is string && request.resource.data.key.size() <= 120
+        && request.resource.data.reason is string && request.resource.data.reason.size() <= 20
+        && request.resource.data.comment is string && request.resource.data.comment.size() <= 200
+        && request.resource.data.q is string && request.resource.data.q.size() <= 200
+        && request.resource.data.lang is string && request.resource.data.lang.size() <= 4
+        && request.resource.data.createdAt is number;
+      allow read, update, delete: if false;
+    }
+  }
+}
