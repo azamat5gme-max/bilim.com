@@ -1,7 +1,7 @@
 // Service worker Bilim: благодаря ему приложение работает без интернета.
 // Когда меняешь любой файл, поменяй версию ниже (bilim-v6 -> bilim-v7 и так далее),
 // чтобы телефоны скачали новую версию.
-const CACHE = "bilim-v6";
+const CACHE = "bilim-v7";
 const FILES = [
   "./",
   "./index.html",

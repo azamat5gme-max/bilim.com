@@ -29,6 +29,7 @@
   --sun:#F4512C; --on-sun:#1B0A04; --sun-soft:#FFE2DA;
   --gold:#E9A100; --gold-soft:#FFF0C4;
   --glacier:#0A8C88; --glacier-soft:#D2F0ED;
+  --blue:#2463C9; --blue-soft:#DCE7FA; --plum:#7E3DB8; --plum-soft:#ECDDF8; --moss:#3F7F1E; --moss-soft:#DFF0D2; --rose:#C22F63; --rose-soft:#FADCE7;
   --good:#18975A; --bad:#C92F2B;
   --sky-top:#141E48; --sky-bottom:#2C428C; --mount-far:#3B52A0; --mount:#22336F; --mount-near:#121B40; --snow:#F2F5FF;
   --on-dark:#F4F6FD; --on-dark-muted:#BAC4E8; --glass:rgba(255,255,255,.12); --glass-line:rgba(255,255,255,.28);
@@ -43,6 +44,7 @@
   --sun:#FF6B4A; --sun-soft:#3C1A12;
   --gold:#FFC23D; --gold-soft:#3A2C0B;
   --glacier:#2DC7BF; --glacier-soft:#0E3033;
+  --blue:#79A8FF; --blue-soft:#13254A; --plum:#C597FF; --plum-soft:#2A1A42; --moss:#8FD45E; --moss-soft:#18300F; --rose:#FF7FA8; --rose-soft:#3A1424;
   --good:#46D18A; --bad:#FF6B66;
   --sky-top:#070C26; --sky-bottom:#18245C; --mount-far:#2A3A78; --mount:#1A2757; --mount-near:#0B1231; --snow:#E6ECFF;
   --shadow:0 1px 2px rgba(0,0,0,.35),0 14px 34px -16px rgba(0,0,0,.7);
@@ -53,6 +55,7 @@
   --sun:#FF6B4A; --sun-soft:#3C1A12;
   --gold:#FFC23D; --gold-soft:#3A2C0B;
   --glacier:#2DC7BF; --glacier-soft:#0E3033;
+  --blue:#79A8FF; --blue-soft:#13254A; --plum:#C597FF; --plum-soft:#2A1A42; --moss:#8FD45E; --moss-soft:#18300F; --rose:#FF7FA8; --rose-soft:#3A1424;
   --good:#46D18A; --bad:#FF6B66;
   --sky-top:#070C26; --sky-bottom:#18245C; --mount-far:#2A3A78; --mount:#1A2757; --mount-near:#0B1231; --snow:#E6ECFF;
   --shadow:0 1px 2px rgba(0,0,0,.35),0 14px 34px -16px rgba(0,0,0,.7);
@@ -362,6 +365,9 @@ main{padding-block:24px 40px}
 .gcard .ico{width:44px;height:44px;border-radius:13px;display:grid;place-items:center}
 .gcard h3{font-size:16px}
 .gcard .topics{font-size:13px;color:var(--muted)}
+.gcard.has-book{grid-template-rows:auto auto auto 1fr auto}
+.gcard .g-book{display:flex;gap:7px;align-items:flex-start;margin:0;font-size:12.5px;font-weight:600;line-height:1.35;color:var(--ink)}
+.gcard .g-book svg{flex:none;margin-top:1px;color:var(--muted)}
 .g-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .g-meta{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
 .mock{display:flex;align-items:center;gap:14px 18px;flex-wrap:wrap}
@@ -429,7 +435,7 @@ main{padding-block:24px 40px}
 .l-sec-head h3{font-size:19px}
 .l-sec-head .ort-lang{margin-top:0}
 .l-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:12px}
-.l-card .topics{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;align-self:start}
+.l-card .topics{display:-webkit-box;-webkit-line-clamp:3;line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;align-self:start}
 .panel.stack > h3{margin:0}
 .l-card .row{gap:6px}
 .lsn{display:grid;gap:18px}
@@ -1370,6 +1376,11 @@ const SUBJ_NAMES = {
   Geography: { ky: "География", ru: "География", en: "Geography" },
   English: { ky: "Англис тили", ru: "Английский", en: "English" },
   Science: { ky: "Табигый илимдер", ru: "Естествознание", en: "Science" },
+  Biology: { ky: "Биология", ru: "Биология", en: "Biology" },
+  Chemistry: { ky: "Химия", ru: "Химия", en: "Chemistry" },
+  Physics: { ky: "Физика", ru: "Физика", en: "Physics" },
+  Economics: { ky: "Экономика", ru: "Экономика", en: "Economics" },
+  CompSci: { ky: "Информатика", ru: "Информатика", en: "Computer Science" },
   Kyrgyz: { ky: "Кыргыз тили", ru: "Кыргызский язык", en: "Kyrgyz" },
   Russian: { ky: "Орус тили", ru: "Русский язык", en: "Russian" },
   ORT: { ky: "ЖРТ", ru: "ОРТ", en: "ORT" }
@@ -1408,6 +1419,10 @@ const ICON = {
   sigma: '<path d="M17.5 5h-11l6 7-6 7h11"/>',
   flask: '<path d="M9 3h6"/><path d="M10 3v6.2L4.8 18a2 2 0 0 0 1.7 3h11a2 2 0 0 0 1.7-3L14 9.2V3"/><path d="M7.4 15h9.2"/>',
   chat: '<path d="M4 5h16v11H10l-5 4v-4H4z"/><path d="M8 9.5h8M8 12.5h5"/>',
+  leaf: '<path d="M5 19c0-8 5-14 15-15-.5 9.5-6.5 15-14 15z"/><path d="M5 19c3-4 6-6.5 9.5-8.5"/>',
+  bolt: '<path d="M13 2.5 4.5 13.5H11l-1 8 8.5-11H12z"/>',
+  chart: '<path d="M4 20V4"/><path d="M4 20h16"/><path d="M8 16v-4M12 16V8M16 16v-6"/>',
+  code: '<path d="M8.5 7 3.5 12l5 5M15.5 7l5 5-5 5"/><path d="M13.5 4.5l-3 15"/>',
   check: '<path d="M5 12.5 9.5 17 19 7.5"/>',
   x: '<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>',
   back: '<path d="M14.5 6 8.5 12l6 6"/>'
@@ -2078,8 +2093,13 @@ function finishRound() {
    Questions live in separate files: window.BILIM_CAMBRIDGE (3 terms), window.BILIM_SCHOOL (4 quarters), window.BILIM_ORT (mock ORT). */
 const CAM = window.BILIM_CAMBRIDGE || {}, SCH = window.BILIM_SCHOOL || {}, ORT = window.BILIM_ORT || null;
 const GRADES = ["6", "7", "8", "9", "10", "11"], GSUBJ = ["math", "science", "english"];
-const GKEY = { math: "Math", science: "Science", english: "English" };
-const GSTYLE = { math: ["var(--sun-soft)", "var(--sun)", "sigma"], science: ["var(--glacier-soft)", "var(--glacier)", "flask"], english: ["var(--gold-soft)", "var(--ink)", "chat"] };
+/* Each grade lists its own subjects (D.subjects), matching the school's books. Old data without a list uses GSUBJ. */
+const gSubjects = D => (D && Array.isArray(D.subjects) ? D.subjects : GSUBJ).filter(s => D && Array.isArray(D[s]) && D[s].length);
+const cpSubjects = C => (C && Array.isArray(C.subjects) ? C.subjects : GSUBJ).filter(s => C && Array.isArray(C[s]) && C[s].length);
+const GKEY = { math: "Math", science: "Science", english: "English", biology: "Biology", chemistry: "Chemistry", physics: "Physics", geography: "Geography", economics: "Economics", cs: "CompSci" };
+const GSTYLE = { math: ["var(--sun-soft)", "var(--sun)", "sigma"], science: ["var(--glacier-soft)", "var(--glacier)", "flask"], english: ["var(--gold-soft)", "var(--ink)", "chat"],
+  biology: ["var(--moss-soft)", "var(--moss)", "leaf"], chemistry: ["var(--plum-soft)", "var(--plum)", "flask"], physics: ["var(--blue-soft)", "var(--blue)", "bolt"],
+  geography: ["var(--glacier-soft)", "var(--glacier)", "globe"], economics: ["var(--rose-soft)", "var(--rose)", "chart"], cs: ["var(--surface-2)", "var(--ink)", "code"] };
 const okSchool = s => !!(s && (s.book === "cam" || s.book === "nat") && GRADES.includes(String(s.grade)) && (s.book === "cam" ? CAM : SCH)[String(s.grade)]);
 let SCHOOL = LS.get("school", null);
 SCHOOL = okSchool(SCHOOL) ? { book: SCHOOL.book, grade: String(SCHOOL.grade) } : null;
@@ -2218,20 +2238,23 @@ function renderGOverview() {
   reviewChip(chips, "grade", gKey() + "|");
   body.appendChild(chips);
 
-  const grid = mk("div", "gsubj");
-  GSUBJ.forEach(s => {
-    const T = D[s][gTerm], st = GSTYLE[s], c = mk("div", "gcard"), i = mk("span", "ico");
+  const grid = mk("div", "gsubj"), SUBS = gSubjects(D).filter(s => D[s][gTerm]);
+  SUBS.forEach(s => {
+    const T = D[s][gTerm], st = GSTYLE[s] || GSTYLE.science, c = mk("div", "gcard"), i = mk("span", "ico");
     i.style.background = st[0]; i.style.color = st[1]; i.innerHTML = ico(st[2], 22);
     const best = P.gp[gKey() + "-" + s + "-" + gTerm];
     const foot = mk("div", "g-foot");
     foot.append(mk("span", "g-meta", tn("questionsN", T.q.length) + " · " + (best ? t("bestScore", { s: best[0] + "/" + best[1] }) : t("notYet"))),
       mkBtn("btn btn-ink btn-sm", t("practiceBtn"), () => startGPractice(s, gTerm)));
-    c.append(i, mk("h3", null, gSubj(s)), mk("p", "topics", topicsOf(T)), foot);
+    c.append(i, mk("h3", null, gSubj(s)));
+    const bk = D.books && D.books[s];
+    if (bk) { const b = mk("p", "g-book"); b.innerHTML = ico("book", 15) + "<span></span>"; b.lastChild.textContent = bk; b.title = t("bookLabel"); c.classList.add("has-book"); c.appendChild(b); }
+    c.append(mk("p", "topics", topicsOf(T)), foot);
     grid.appendChild(c);
   });
   body.appendChild(grid);
 
-  const n = GSUBJ.reduce((a, s) => a + D[s][gTerm].q.length, 0), mins = examMinutes(n);
+  const n = SUBS.reduce((a, s) => a + D[s][gTerm].q.length, 0), mins = examMinutes(n);
   const m = mk("div", "panel mock"), mi = mk("span", "g-ico"); mi.style.background = "var(--sun-soft)"; mi.style.color = "var(--sun)"; mi.innerHTML = ico("timer", 24);
   const tx = mk("div", "g-txt");
   let meta = t("mockMeta", { q: tn("questionsN", n), m: mins });
@@ -2264,11 +2287,11 @@ function darkCard(label, eyebrow, title, desc, meta, buttons, note) {
   return box;
 }
 function cpBanner(C) {
-  const n = GSUBJ.reduce((a, s) => a + C[s].length, 0), one = Math.round(C.minutes / 3);
+  const CS = cpSubjects(C), n = CS.reduce((a, s) => a + C[s].length, 0), one = Math.round(C.minutes / CS.length);
   let meta = t("mockMeta", { q: tn("questionsN", n), m: C.minutes });
   const best = P.ex[gKey() + "-cp"]; if (best != null) meta += " · " + t("bestPct", { p: best });
   const btns = [mkBtn("btn btn-sun", t("cpFull", { m: C.minutes }), () => startExam("cp", { subj: "all" }))];
-  GSUBJ.forEach(s => btns.push(mkBtn("btn btn-glass btn-sm", t("cpOne", { s: gSubj(s), m: one }), () => startExam("cp", { subj: s }))));
+  CS.forEach(s => btns.push(mkBtn("btn btn-glass btn-sm", t("cpOne", { s: gSubj(s), m: one }), () => startExam("cp", { subj: s }))));
   return darkCard(t("cpTitle"), "Stage 9 · Checkpoint", t("cpTitle"), t("cpDesc"), meta, btns, t("cpNote"));
 }
 
@@ -2415,14 +2438,14 @@ function startExam(kind, opts) {
   } else {
     const D = bookData(); if (!D) return;
     if (kind === "term") {
-      GSUBJ.forEach(s => shuffle(D[s][opts.term].q.map((_, i) => i)).forEach(i => items.push({ key: gKey() + "|" + s + "|" + opts.term + "|" + i, g: s })));
+      gSubjects(D).filter(s => D[s][opts.term]).forEach(s => shuffle(D[s][opts.term].q.map((_, i) => i)).forEach(i => items.push({ key: gKey() + "|" + s + "|" + opts.term + "|" + i, g: s })));
       key = gKey() + "-t" + opts.term;
       secs.push({ id: "all", from: 0, to: items.length, minutes: examMinutes(items.length) });
     } else {
-      const C = D.checkpoint, subs = opts.subj === "all" ? GSUBJ : [opts.subj];
+      const C = D.checkpoint, subs = opts.subj === "all" ? cpSubjects(C) : [opts.subj];
       subs.forEach(s => shuffle(C[s].map((_, i) => i)).forEach(i => items.push({ key: gKey() + "|cp|" + s + "|" + i, g: s })));
       key = gKey() + "-cp" + (opts.subj === "all" ? "" : "-" + opts.subj);
-      secs.push({ id: "all", from: 0, to: items.length, minutes: opts.subj === "all" ? C.minutes : Math.round(C.minutes / 3) });
+      secs.push({ id: "all", from: 0, to: items.length, minutes: opts.subj === "all" ? C.minutes : Math.round(C.minutes / cpSubjects(C).length) });
     }
   }
   if (GR && GR.view === view) GR = null;
@@ -2549,7 +2572,7 @@ function renderExamResult() {
   const body = vBody(v), panel = mk("div", "panel"), res = mk("div", "result"); panel.appendChild(res); body.appendChild(panel);
   const big = mk("div", "big"); big.innerHTML = R.pct + "<small>%</small>";
   const sb = mk("div", "sbars"); sb.setAttribute("role", "group"); sb.setAttribute("aria-label", ort ? t("bySection") : t("bySubject"));
-  const groups = ort ? EX.secs.map(S => [S.id, S.title]) : GSUBJ.map(s => [s, gSubj(s)]);
+  const groups = ort ? EX.secs.map(S => [S.id, S.title]) : EX.items.map(it => it.g).filter((g, k, a) => a.indexOf(g) === k).map(s => [s, gSubj(s)]);
   groups.forEach(gr => {
     if (!R.per[gr[0]]) return;
     const a = R.per[gr[0]][0], b = R.per[gr[0]][1], row = mk("div", "sbar"), bar = mk("div", "bar");
